@@ -1,35 +1,80 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import { supabase } from "./lib/initSupabase";
+import { getUserSession } from "./services/user-service";
+import { Session } from "@supabase/supabase-js";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [session, setSession] = useState<Session>();
+  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(true);
 
+  const generateUserColor = () => {
+    const colors = [
+      "#3b82f6",
+      "#14b8a6",
+      "#f87171",
+      "#eab308",
+      "#a855f7",
+      "#6366f1",
+    ];
+    const index = Math.floor(Math.random() * colors.length);
+    return colors[index];
+  };
+
+  const createUserNameFromEmail = (email: string) => {
+    try {
+      let username = email.split("@")[0];
+      return username;
+    } catch (error) {
+      throw new Error("Error al crear el nombre de usuario" + error);
+    }
+  };
+
+  useEffect(() => {
+    getUserSession()
+      .then(async (session) => {
+        if (session) {
+          const isNewUser =
+            !session.user.user_metadata.userName ||
+            !session.user.user_metadata.userColor;
+
+          if (isNewUser) {
+            const userName = createUserNameFromEmail(
+              session.user.email as string
+            );
+            const userColor = generateUserColor();
+
+            await supabase.auth.updateUser({
+              data: {
+                userName,
+                userColor,
+              },
+            });
+
+            const refreshedSession = await getUserSession();
+            setSession(refreshedSession ?? undefined);
+          } else {
+            setSession(session);
+          }
+        }
+
+        setIsAuthenticating(false);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la sesión del usuario:", error);
+        setIsAuthenticating(false);
+      });
+  }, []);
+
+  if (isAuthenticating) {
+    return <div>Validando la sesión, espera...</div>;
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <AppRoutes session={session} />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
