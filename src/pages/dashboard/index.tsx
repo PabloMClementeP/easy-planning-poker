@@ -34,12 +34,11 @@ const Dashboard = ({ session }: SessionProps) => {
     const userRooms = await getPlanningRoom(session?.user?.id);
     const publicRooms = await getAllPublicRooms();
 
-    // Combinar y eliminar duplicados usando el ID como clave
     const combined = [...userRooms, ...publicRooms];
     const uniqueRoomsMap = new Map();
 
     combined.forEach((room) => {
-      uniqueRoomsMap.set(room.id, room); // si ya existe el id, no se agrega de nuevo
+      uniqueRoomsMap.set(room.id, room);
     });
 
     const uniqueRooms = Array.from(uniqueRoomsMap.values());
