@@ -5,7 +5,7 @@ interface RoomProps {
 }
 
 const Room = ({ session }: RoomProps) => {
-  return <div>Room</div>;
+  return <div>{session.user.id}</div>;
 };
 
 export default Room;
