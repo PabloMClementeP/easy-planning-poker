@@ -34,6 +34,8 @@ const Room = ({ session }: RoomProps) => {
   const channelRef = useRef<any>(null);
 
   useEffect(() => {
+    console.log(owner, isLoading); // TEMP: eliminar cuando ya se usen
+
     if (!id || !session?.user?.id) return;
 
     if (!channelRef.current) {
