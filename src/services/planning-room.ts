@@ -36,7 +36,9 @@ export const getPlanningRoom = async (userId: string): Promise<any[]> => {
   return data ?? [];
 };
 
-export const getPlanningRoomById = async (roomId: string) => {
+export const getPlanningRoomById = async (
+  roomId: string
+): Promise<any[] | null> => {
   const { data } = await supabase.from(PLANNING_ROOM).select().eq("id", roomId);
 
   return data;
