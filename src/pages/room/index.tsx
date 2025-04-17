@@ -6,16 +6,19 @@ import { getUserById } from "../../services/user-service";
 import { getPlanningRoomById } from "../../services/planning-room";
 import {
   Card,
-  CardsList,
   CardsSection,
   CardValue,
   Container,
   Main,
   UserDot,
   UserItem,
-  UsersSection,
   RevealButton,
+  SideBar,
+  CardsGrid,
+  Header,
 } from "./style";
+
+const cards = [1, 2, 3, 5, 8, 13];
 
 interface RoomProps {
   session: Session;
@@ -30,6 +33,7 @@ const Room = ({ session }: RoomProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [participantsCount, setParticipantsCount] = useState<number>(0);
   const [showVotes, setShowVotes] = useState<boolean>(false);
+  const [selectedVote, setSelectedVote] = useState<number | null>(null);
 
   const channelRef = useRef<any>(null);
 
@@ -55,7 +59,8 @@ const Room = ({ session }: RoomProps) => {
             Object.entries(state).map(async ([userID, presenceArray]: any) => {
               const res = await getUserById(userID);
               const user = res.user;
-              const vote = presenceArray[0]?.vote || null;
+              const latestPresence = presenceArray[presenceArray.length - 1];
+              const vote = latestPresence?.vote || null;
               return { ...user, vote };
             })
           );
@@ -69,6 +74,9 @@ const Room = ({ session }: RoomProps) => {
           }
         });
 
+      channel.on("broadcast", { event: "reveal_votes" }, () => {
+        setShowVotes(true);
+      });
       channelRef.current = channel;
 
       return () => {
@@ -98,36 +106,93 @@ const Room = ({ session }: RoomProps) => {
   }, []);
 
   const handleVote = async (vote: number) => {
+    setSelectedVote(vote);
     await channelRef.current?.track({ vote });
+
+    // Esto ayuda a forzar el sync (no siempre necesario, pero útil si hay delays)
+    const state = channelRef.current?.presenceState();
+    if (state) {
+      const users = await Promise.all(
+        Object.entries(state).map(async ([userID, presenceArray]: any) => {
+          const res = await getUserById(userID);
+          const user = res.user;
+          const vote = presenceArray[0]?.vote || null;
+          return { ...user, vote };
+        })
+      );
+      setConnectedUsers(users);
+    }
+    console.log("Presence state:", state);
   };
 
   const handleRevealVotes = () => {
     setShowVotes(true);
+    channelRef.current?.send({
+      type: "broadcast",
+      event: "reveal_votes",
+      payload: {},
+    });
   };
 
   return (
     <Main>
+      <Header>
+        <div>
+          <a href="/">Salir al dashboard</a>
+          <h1>{room?.name}</h1>
+        </div>
+        <h3>
+          Room Id:{" "}
+          <span style={{ fontWeight: 600, color: "rgb(219, 95, 12)" }}>
+            {room.id}
+          </span>
+          📎
+        </h3>
+      </Header>
       <Container>
         <CardsSection>
-          <CardsList>
-            {[1, 2, 3, 4, 5].map((num) => (
-              <Card key={num} onClick={() => handleVote(num)}>
-                <CardValue>{num}</CardValue>
+          <CardsGrid>
+            {cards.map((value, index) => (
+              <Card key={index} onClick={() => handleVote(value)}>
+                <CardValue $selected={value == selectedVote}>{value}</CardValue>
               </Card>
             ))}
-          </CardsList>
+          </CardsGrid>
         </CardsSection>
 
-        <UsersSection>
-          <h3>Usuarios conectados: {participantsCount}</h3>
-
+        <SideBar>
           {/* Mostrar botón solo al owner */}
-          {room?.owner === session?.user?.id && (
+          {room?.owner === session?.user?.id ? (
             <RevealButton onClick={handleRevealVotes} disabled={showVotes}>
               Girar Cartas
             </RevealButton>
+          ) : (
+            <div
+              style={{
+                height: 40,
+                textAlign: "center",
+                lineHeight: "40px",
+                borderRadius: 4,
+                backgroundColor: "#f5f5f5",
+              }}
+            >
+              Esperando votos del equipo
+            </div>
           )}
 
+          <h3
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: 16,
+              fontWeight: 600,
+              margin: "20px 0",
+            }}
+          >
+            Usuarios:
+            <span>{participantsCount}</span>
+          </h3>
           <ul>
             {connectedUsers.map((user) => (
               <UserItem key={user?.id}>
@@ -145,7 +210,7 @@ const Room = ({ session }: RoomProps) => {
               </UserItem>
             ))}
           </ul>
-        </UsersSection>
+        </SideBar>
       </Container>
     </Main>
   );

@@ -2,12 +2,15 @@ import { Session } from "@supabase/supabase-js";
 import Header from "../../components/header";
 import { useEffect, useState } from "react";
 import NewRoomModal from "../../components/new-room-modal";
-import {
-  getAllPublicRooms,
-  getPlanningRoom,
-} from "../../services/planning-room";
+import { getPlanningRoom } from "../../services/planning-room";
 import { RoomCard } from "../../components/room-card";
-import { DashboardSection } from "./style";
+import {
+  DashboardSection,
+  JoinRoomButton,
+  JoinRoomInput,
+  JoinRoomWrapper,
+} from "./style";
+import { useNavigate } from "react-router-dom";
 
 export type RoomType = {
   id: string;
@@ -30,20 +33,13 @@ const Dashboard = ({ session }: SessionProps) => {
   const hasAtLeastOneRoom = rooms && rooms?.length > 0;
   const shouldShowRoom = !loading && hasAtLeastOneRoom;
 
+  const [roomIdInput, setRoomIdInput] = useState("");
+  const navigate = useNavigate();
+
   const loadUserRooms = async () => {
     const userRooms = await getPlanningRoom(session?.user?.id);
-    const publicRooms = await getAllPublicRooms();
 
-    const combined = [...userRooms, ...publicRooms];
-    const uniqueRoomsMap = new Map();
-
-    combined.forEach((room) => {
-      uniqueRoomsMap.set(room.id, room);
-    });
-
-    const uniqueRooms = Array.from(uniqueRoomsMap.values());
-
-    setRooms(uniqueRooms);
+    setRooms(userRooms);
     setLoading(false);
   };
 
@@ -53,6 +49,12 @@ const Dashboard = ({ session }: SessionProps) => {
     }
   }, [session?.user?.id]);
 
+  const handleEnterRoom = () => {
+    if (roomIdInput.trim() !== "") {
+      navigate(`/rooms/${roomIdInput.trim()}`);
+    }
+  };
+
   return (
     <>
       <Header
@@ -60,8 +62,16 @@ const Dashboard = ({ session }: SessionProps) => {
         setShowCreateRoomModal={setShowCreateRoomModal}
       />
 
+      <JoinRoomWrapper>
+        <JoinRoomInput
+          type="text"
+          placeholder="Ingresá el ID de la sala"
+          value={roomIdInput}
+          onChange={(e) => setRoomIdInput(e.target.value)}
+        />
+        <JoinRoomButton onClick={handleEnterRoom}>Entrar</JoinRoomButton>
+      </JoinRoomWrapper>
       {hsaNoCreatedARoom && <p>Tus salas se mostrarán aquí luego de creadas</p>}
-
       <DashboardSection>
         {shouldShowRoom &&
           rooms?.map(({ id, name, created_at, isPublic }, key) => (
