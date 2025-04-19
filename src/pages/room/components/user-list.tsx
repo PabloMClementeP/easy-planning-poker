@@ -1,4 +1,4 @@
-import { UserDot, UserItem } from "../style";
+import { UserDot, UserItem, UserName, USersList } from "../style";
 
 const UserList = ({
   users,
@@ -7,12 +7,12 @@ const UserList = ({
   users: any[];
   showVotes: boolean;
 }) => (
-  <ul>
+  <USersList>
     {users.map((user) => (
       <UserItem key={user?.id}>
         <UserDot color={user?.user_metadata?.userColor} />
-        {user?.user_metadata?.userName}
-        <span style={{ marginLeft: 10 }}>
+        <UserName>{user?.user_metadata?.userName}</UserName>
+        <UserName>
           {showVotes
             ? user.vote !== null
               ? `🎯 ${user.vote}`
@@ -20,10 +20,10 @@ const UserList = ({
             : user.vote !== null
             ? "✅"
             : "🕔"}
-        </span>
+        </UserName>
       </UserItem>
     ))}
-  </ul>
+  </USersList>
 );
 
 export default UserList;

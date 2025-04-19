@@ -27,12 +27,25 @@ export const Container = styled.div`
 
 export const CardsSection = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
   gap: 10px;
   height: 100%;
   width: 100%;
   padding-bottom: 100px;
+`;
+
+export const StoryInput = styled.textarea`
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 520px;
+  outline: none;
+  resize: none;
+  height: 100px;
+  transition: border-color 0.2s ease;
 `;
 
 export const CardsGrid = styled.div`
@@ -85,6 +98,13 @@ export const SideBar = styled.div`
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 `;
 
+export const USersList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
 export const UserItem = styled.li`
   display: flex;
   align-items: center;
@@ -92,10 +112,17 @@ export const UserItem = styled.li`
 `;
 
 export const UserDot = styled.div<{ color: string }>`
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background-color: ${(props) => props.color || "#000"};
+`;
+
+export const UserName = styled.span`
+  display: flex;
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
 `;
 
 export const RevealButton = styled.button`

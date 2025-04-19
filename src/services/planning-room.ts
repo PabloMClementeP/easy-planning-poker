@@ -93,3 +93,32 @@ export const getAllPublicRooms = async (): Promise<any[]> => {
 
   return data ?? [];
 };
+
+export const getTicketDescription = async (
+  roomId: string | undefined
+): Promise<string> => {
+  const { data, error } = await supabase
+    .from(PLANNING_ROOM)
+    .select("ticket_description")
+    .eq("id", roomId)
+    .single();
+
+  if (error) {
+    console.error("Error getting ticket description:", error.message);
+    return "";
+  }
+
+  return data?.ticket_description ?? "";
+};
+
+export const updateTicketDescription = async (
+  roomId: string | undefined,
+  ticketDescription: string
+) => {
+  await supabase
+    .from(PLANNING_ROOM)
+    .update({
+      ticket_description: ticketDescription,
+    })
+    .eq("id", roomId);
+};

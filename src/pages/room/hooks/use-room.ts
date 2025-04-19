@@ -30,6 +30,7 @@ const useRoom = (session: any) => {
   const [participantsCount, setParticipantsCount] = useState(0);
   const [showVotes, setShowVotes] = useState(false);
   const [selectedVote, setSelectedVote] = useState<number | null>(null);
+  const [ticketDescription, setTicketDescription] = useState<string>("");
 
   const channelRef = useRef<any>(null);
 
@@ -72,6 +73,13 @@ const useRoom = (session: any) => {
         await channel.track({ vote: null });
         fetchConnectedUsers(channel.presenceState());
       })
+      .on(
+        "broadcast",
+        { event: "update_ticket_description" },
+        (payload: any) => {
+          setTicketDescription(payload.payload.description);
+        }
+      )
       .subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
           await channel.track({ vote: null });
@@ -139,15 +147,29 @@ const useRoom = (session: any) => {
     });
   };
 
+  const handleTicketDescriptionChange = (description: string) => {
+    setTicketDescription(description);
+    if (channelRef.current) {
+      channelRef.current.send({
+        type: "broadcast",
+        event: "update_ticket_description",
+        payload: { description },
+      });
+    }
+  };
+
   return {
     room,
     connectedUsers,
     participantsCount,
     showVotes,
     selectedVote,
+    ticketDescription,
+    setTicketDescription,
     handleVote,
     handleRevealVotes,
     handleResetVotes,
+    handleTicketDescriptionChange,
     isOwner,
   };
 };
