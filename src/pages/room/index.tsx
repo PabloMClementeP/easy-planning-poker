@@ -42,7 +42,7 @@ const Room = ({ session }: RoomProps) => {
   } = useRoom(session);
 
   const [copied, setCopied] = useState(false);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  // const [isEditing, setIsEditing] = useState<boolean>(false);
   const [ticketDraft, setTicketDraft] = useState<string>(ticketDescription);
 
   const handleCopy = () => {
@@ -124,7 +124,7 @@ const Room = ({ session }: RoomProps) => {
                   onClick={async () => {
                     await updateTicketDescription(room?.id, ticketDraft);
                     handleTicketDescriptionChange(ticketDraft);
-                    setIsEditing(false);
+                    // setIsEditing(false);
                   }}
                 >
                   Guardar
