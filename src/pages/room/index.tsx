@@ -1,25 +1,24 @@
 import { Session } from "@supabase/supabase-js";
-import { MdOutlineContentCopy } from "react-icons/md";
 import {
   Main,
   Container,
   CardsSection,
   CardsGrid,
-  Header,
-  SideBar,
   RevealButton,
   StoryInput,
 } from "./style";
-import VoteCard from "./components/vote-card";
-import UserList from "./components/user-list";
-import useRoom from "./hooks/use-room";
+
 import { useEffect, useState } from "react";
 import {
   getTicketDescription,
   updateTicketDescription,
 } from "../../services/planning-room";
+import Card from "../../components/card";
+import RoomHeader from "./components/room-header";
+import useRoom from "../../hooks/use-room";
+import Sidebar from "../../components/sidebar";
 
-const cards = [1, 2, 3, 5, 8, 13];
+const cards = ["1", "2", "3", "5", "8", "13", "?"];
 
 interface RoomProps {
   session: Session;
@@ -30,28 +29,15 @@ const Room = ({ session }: RoomProps) => {
     room,
     showVotes,
     selectedVote,
-    connectedUsers,
-    participantsCount,
     ticketDescription,
+    connectedUsers,
     setTicketDescription,
     handleVote,
-    handleRevealVotes,
-    handleResetVotes,
     handleTicketDescriptionChange,
     isOwner,
   } = useRoom(session);
 
-  const [copied, setCopied] = useState(false);
-  // const [isEditing, setIsEditing] = useState<boolean>(false);
   const [ticketDraft, setTicketDraft] = useState<string>(ticketDescription);
-
-  const handleCopy = () => {
-    if (room?.id) {
-      navigator.clipboard.writeText(room.id);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   useEffect(() => {
     setTicketDraft(ticketDescription);
@@ -70,45 +56,7 @@ const Room = ({ session }: RoomProps) => {
 
   return (
     <Main>
-      <Header>
-        <div>
-          <a href="/">Salir al dashboard</a>
-          <h1>{room?.name}</h1>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-          }}
-        >
-          {copied ? (
-            <span style={{ fontSize: 14 }}>Copiado ✅</span>
-          ) : (
-            <span style={{ fontSize: 14 }}>Copiar ID</span>
-          )}
-          <h3
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
-            Room Id:{" "}
-            <span style={{ fontWeight: 600, color: "rgb(219, 95, 12)" }}>
-              {room?.id}
-            </span>{" "}
-            <MdOutlineContentCopy
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                handleCopy();
-              }}
-            />
-          </h3>
-        </div>
-      </Header>
+      <RoomHeader room={room} />
 
       <Container>
         <CardsSection>
@@ -124,7 +72,6 @@ const Room = ({ session }: RoomProps) => {
                   onClick={async () => {
                     await updateTicketDescription(room?.id, ticketDraft);
                     handleTicketDescriptionChange(ticketDraft);
-                    // setIsEditing(false);
                   }}
                 >
                   Guardar
@@ -145,7 +92,7 @@ const Room = ({ session }: RoomProps) => {
           )}
           <CardsGrid>
             {cards.map((value, index) => (
-              <VoteCard
+              <Card
                 key={index}
                 value={value}
                 selected={selectedVote === value}
@@ -156,50 +103,7 @@ const Room = ({ session }: RoomProps) => {
           </CardsGrid>
         </CardsSection>
 
-        <SideBar>
-          {isOwner ? (
-            <>
-              <RevealButton onClick={handleRevealVotes} disabled={showVotes}>
-                Girar Cartas
-              </RevealButton>
-              <RevealButton
-                style={{
-                  marginTop: 10,
-                  backgroundColor: "#0c5ed97f",
-                  color: "#ffffff",
-                }}
-                onClick={handleResetVotes}
-              >
-                Resetear Votos
-              </RevealButton>
-            </>
-          ) : (
-            <div
-              style={{
-                height: 40,
-                textAlign: "center",
-                lineHeight: "40px",
-                backgroundColor: "#f5f5f5",
-              }}
-            >
-              Esperando votos del equipo
-            </div>
-          )}
-
-          <h3
-            style={{
-              margin: "20px 0",
-              fontSize: 16,
-              fontWeight: 600,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            Usuarios: <span>{participantsCount}</span>
-          </h3>
-
-          <UserList users={connectedUsers} showVotes={showVotes} />
-        </SideBar>
+        <Sidebar session={session} users={connectedUsers} />
       </Container>
     </Main>
   );

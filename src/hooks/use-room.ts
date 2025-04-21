@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { supabase } from "../../../lib/initSupabase";
-import { getUserById } from "../../../services/user-service";
-import { getPlanningRoomById } from "../../../services/planning-room";
+import { getUserById } from "../services/user-service";
+import { supabase } from "../lib/initSupabase";
+import { getPlanningRoomById } from "../services/planning-room";
 
 interface User {
   id?: string | undefined;
@@ -29,7 +29,7 @@ const useRoom = (session: any) => {
   const [connectedUsers, setConnectedUsers] = useState<User[]>([]);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [showVotes, setShowVotes] = useState(false);
-  const [selectedVote, setSelectedVote] = useState<number | null>(null);
+  const [selectedVote, setSelectedVote] = useState<string | null>(null);
   const [ticketDescription, setTicketDescription] = useState<string>("");
 
   const channelRef = useRef<any>(null);
@@ -114,7 +114,7 @@ const useRoom = (session: any) => {
     fetchRoom();
   }, [id, session?.user?.id, navigate]);
 
-  const handleVote = async (vote: number) => {
+  const handleVote = async (vote: string) => {
     if (showVotes || !channelRef.current) return;
 
     setSelectedVote(vote);
