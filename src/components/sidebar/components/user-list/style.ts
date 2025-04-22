@@ -13,7 +13,7 @@ export const UserItem = styled.li`
   gap: 10px;
 `;
 
-export const UserDot = styled.div<{ color: string }>`
+export const UserDot = styled.div<{ color?: string }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;

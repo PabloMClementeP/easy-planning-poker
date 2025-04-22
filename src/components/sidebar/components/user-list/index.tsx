@@ -1,12 +1,9 @@
 import { UserDot, UserItem, UserName, USersList } from "./style";
+import { useRoomContext } from "../../../../pages/room/context/room-context";
 
-const UserList = ({
-  users,
-  showVotes,
-}: {
-  users: any[];
-  showVotes: boolean;
-}) => {
+const UserList = () => {
+  const { connectedUsers, showVotes } = useRoomContext();
+
   return (
     <USersList>
       <h3
@@ -18,9 +15,9 @@ const UserList = ({
         }}
       >
         <span>Usuarios</span>
-        {users.length}
+        {connectedUsers.length}
       </h3>
-      {users.map((user) => (
+      {connectedUsers.map((user) => (
         <UserItem key={user?.id}>
           <UserDot color={user?.user_metadata?.userColor} />
           <UserName>{user?.user_metadata?.userName}</UserName>

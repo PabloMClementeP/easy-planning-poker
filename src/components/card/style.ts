@@ -10,6 +10,7 @@ export const CardWrapper = styled.div<{
   border-radius: 4px;
   box-shadow: 0 0 4.95px 0.4px #0101010d;
   transition: box-shadow 0.4s;
+  cursor: pointer;
 
   background-color: ${({ $selected }) => ($selected ? "#3b82f6" : "#fff")};
   color: ${({ $selected }) => ($selected ? "#fff" : "#000")};
@@ -23,6 +24,7 @@ export const UpperText = styled.div`
   text-align: left;
   padding-bottom: 5px;
   color: #808284;
+  user-select: none;
 `;
 
 export const BottomText = styled.div`
@@ -30,6 +32,7 @@ export const BottomText = styled.div`
   padding-bottom: 5px;
   color: #808284;
   transform: rotate(-180deg);
+  user-select: none;
 `;
 
 export const CenterCard = styled.div`
@@ -44,6 +47,7 @@ export const CenterCard = styled.div`
   font-weight: 300;
   margin-right: 16px;
   height: 120px;
+  user-select: none;
 `;
 
 export const CardContainer = styled.span`

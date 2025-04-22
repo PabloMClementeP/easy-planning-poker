@@ -1,17 +1,11 @@
-import { Session } from "@supabase/supabase-js";
-import useRoom from "../../hooks/use-room";
 import SidebarHeader from "./components/sidebar-header";
 import UserList from "./components/user-list";
 import { RevealButton, SidebarWrapper } from "./style";
+import { useRoomContext } from "../../pages/room/context/room-context";
 
-interface SidebarProps {
-  session: Session | null;
-  users: any[];
-}
-
-const Sidebar = ({ session, users }: SidebarProps) => {
+const Sidebar = () => {
   const { showVotes, handleRevealVotes, handleResetVotes, isOwner } =
-    useRoom(session);
+    useRoomContext();
 
   return (
     <SidebarWrapper>
@@ -37,8 +31,7 @@ const Sidebar = ({ session, users }: SidebarProps) => {
           </RevealButton>
         </div>
       )}
-
-      <UserList users={users} showVotes={showVotes} />
+      <UserList />
     </SidebarWrapper>
   );
 };

@@ -15,27 +15,22 @@ import {
 } from "../../services/planning-room";
 import Card from "../../components/card";
 import RoomHeader from "./components/room-header";
-import useRoom from "../../hooks/use-room";
 import Sidebar from "../../components/sidebar";
+import { RoomProvider, useRoomContext } from "./context/room-context";
 
 const cards = ["1", "2", "3", "5", "8", "13", "?"];
 
-interface RoomProps {
-  session: Session;
-}
-
-const Room = ({ session }: RoomProps) => {
+const RoomContent = () => {
   const {
     room,
     showVotes,
     selectedVote,
     ticketDescription,
-    connectedUsers,
     setTicketDescription,
     handleVote,
     handleTicketDescriptionChange,
     isOwner,
-  } = useRoom(session);
+  } = useRoomContext();
 
   const [ticketDraft, setTicketDraft] = useState<string>(ticketDescription);
 
@@ -103,9 +98,17 @@ const Room = ({ session }: RoomProps) => {
           </CardsGrid>
         </CardsSection>
 
-        <Sidebar session={session} users={connectedUsers} />
+        <Sidebar />
       </Container>
     </Main>
+  );
+};
+
+const Room = ({ session }: { session: Session }) => {
+  return (
+    <RoomProvider session={session}>
+      <RoomContent />
+    </RoomProvider>
   );
 };
 

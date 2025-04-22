@@ -1,9 +1,9 @@
 // src/routes/AppRoutes.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "../pages/dashboard";
-import Room from "../pages/room";
 import Login from "../pages/login";
 import { Session } from "@supabase/supabase-js";
+import Room from "../pages/room";
 
 type Props = {
   session: Session | undefined;
