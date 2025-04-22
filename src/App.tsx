@@ -17,7 +17,7 @@ function App() {
         if (session) {
           const isNew =
             !session.user.user_metadata.userName ||
-            !session.user.user_metadata.userColor;
+            !session.user.user_metadata.userAvatar;
 
           if (isNew) {
             setSession(session);
@@ -35,11 +35,11 @@ function App() {
       });
   }, []);
 
-  const handleUserSetup = async (userName: string, userColor: string) => {
+  const handleUserSetup = async (userName: string, userAvatar: string) => {
     await supabase.auth.updateUser({
       data: {
         userName,
-        userColor,
+        userAvatar,
       },
     });
 

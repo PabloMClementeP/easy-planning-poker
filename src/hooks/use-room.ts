@@ -8,7 +8,7 @@ interface User {
   id?: string | undefined;
   user_metadata?: {
     userName?: string;
-    userColor?: string;
+    userAvatar?: string;
   };
   vote?: number | null;
 }

@@ -41,17 +41,26 @@ export const Input = styled.input`
 
 export const ColorPicker = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: center;
+  flex-wrap: wrap;
 `;
 
-export const ColorCircle = styled.div<{ color: string; selected: boolean }>`
-  width: 32px;
-  height: 32px;
+export const AvatarOption = styled.div<{
+  $isSelected: boolean;
+}>`
   border-radius: 50%;
-  background-color: ${({ color }) => color};
-  border: ${({ selected }) => (selected ? "3px solid #000" : "2px solid #fff")};
   cursor: pointer;
+  padding: 5px;
+  height: 70px;
+  width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: ${({ $isSelected }) =>
+    $isSelected ? "2px solid #d12e2e" : "transparent"};
+  background-color: ${({ $isSelected }) =>
+    $isSelected ? "#2563eb" : "transparent"};
 `;
 
 export const Button = styled.button`

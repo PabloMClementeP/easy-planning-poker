@@ -18,12 +18,16 @@ const Card = ({
   disabled: boolean;
 }) => {
   return (
-    <CardWrapper onClick={!disabled ? onClick : undefined} $selected={selected}>
-      <UpperText>{value}</UpperText>
-      <CenterCard>
+    <CardWrapper
+      onClick={!disabled ? onClick : undefined}
+      $selected={selected}
+      disabled={disabled}
+    >
+      <UpperText $selected={selected}>{value}</UpperText>
+      <CenterCard $selected={selected}>
         <CardContainer>{value}</CardContainer>
       </CenterCard>
-      <BottomText>{value}</BottomText>
+      <BottomText $selected={selected}>{value}</BottomText>
     </CardWrapper>
   );
 };

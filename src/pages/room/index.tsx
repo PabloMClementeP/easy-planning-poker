@@ -15,7 +15,7 @@ import {
 } from "../../services/planning-room";
 import Card from "../../components/card";
 import RoomHeader from "./components/room-header";
-import Sidebar from "../../components/sidebar";
+import Sidebar from "./components/sidebar";
 import { RoomProvider, useRoomContext } from "./context/room-context";
 
 const cards = ["1", "2", "3", "5", "8", "13", "?"];

@@ -72,6 +72,6 @@ This project is licensed under the MIT License.
 
 ## 🌐 Live Demo
 
-Coming soon!
+[Planning Poker on Vercel](https://easy-planning-poker.vercel.app/)
 
 Made with ❤️ by Pablo Clemente

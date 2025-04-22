@@ -7,4 +7,9 @@ export const HeaderWrapper = styled.div`
   padding: 20px;
   background-color: #3b82f6;
   color: white;
+
+  p {
+    width: 100%;
+    text-align: center;
+  }
 `;

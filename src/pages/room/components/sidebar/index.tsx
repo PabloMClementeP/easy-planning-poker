@@ -1,7 +1,7 @@
 import SidebarHeader from "./components/sidebar-header";
 import UserList from "./components/user-list";
 import { RevealButton, SidebarWrapper } from "./style";
-import { useRoomContext } from "../../pages/room/context/room-context";
+import { useRoomContext } from "../../context/room-context";
 
 const Sidebar = () => {
   const { showVotes, handleRevealVotes, handleResetVotes, isOwner } =
@@ -13,7 +13,7 @@ const Sidebar = () => {
       {isOwner && (
         <div
           style={{
-            padding: 20,
+            padding: "20px 20px 0",
           }}
         >
           <RevealButton onClick={handleRevealVotes} disabled={showVotes}>

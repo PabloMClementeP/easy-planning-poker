@@ -1,7 +1,16 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+// Estilos compartidos para textos que cambian con $selected
+const sharedTextStyles = css<{ $selected?: boolean }>`
+  text-align: left;
+  padding-bottom: 5px;
+  user-select: none;
+  color: ${({ $selected }) => ($selected ? "#fff" : "#808284")};
+`;
 
 export const CardWrapper = styled.div<{
   $selected?: boolean;
+  disabled?: boolean;
 }>`
   font-weight: 300;
   padding: 5px;
@@ -10,32 +19,30 @@ export const CardWrapper = styled.div<{
   border-radius: 4px;
   box-shadow: 0 0 4.95px 0.4px #0101010d;
   transition: box-shadow 0.4s;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
 
   background-color: ${({ $selected }) => ($selected ? "#3b82f6" : "#fff")};
   color: ${({ $selected }) => ($selected ? "#fff" : "#000")};
 
-  &:hover {
-    outline: 2px solid #4b9ae8;
-  }
+  ${({ disabled }) =>
+    !disabled &&
+    `
+      &:hover {
+        outline: 2px solid #4b9ae8;
+      }
+    `}
 `;
 
-export const UpperText = styled.div`
-  text-align: left;
-  padding-bottom: 5px;
-  color: #808284;
-  user-select: none;
+export const UpperText = styled.div<{ $selected?: boolean }>`
+  ${sharedTextStyles}
 `;
 
-export const BottomText = styled.div`
-  text-align: left;
-  padding-bottom: 5px;
-  color: #808284;
+export const BottomText = styled.div<{ $selected?: boolean }>`
+  ${sharedTextStyles}
   transform: rotate(-180deg);
-  user-select: none;
 `;
 
-export const CenterCard = styled.div`
+export const CenterCard = styled.div<{ $selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,11 +50,11 @@ export const CenterCard = styled.div`
   font-size: 46px;
   border: 1px solid #d5d9de;
   border-radius: 4px;
-  margin-left: 16px;
+  margin: 0 16px;
   font-weight: 300;
-  margin-right: 16px;
   height: 120px;
   user-select: none;
+  color: ${({ $selected }) => ($selected ? "#fff" : "#000")};
 `;
 
 export const CardContainer = styled.span`

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { supabase } from "../../lib/initSupabase";
 import { Button, Form, Input, Label } from "./style";
+import Header from "../../components/header";
 
 const Login = () => {
   const [emailAdress, setEmailAddress] = useState<string>("");
@@ -36,22 +37,25 @@ const Login = () => {
   };
 
   return (
-    <Form onSubmit={authenticateUser}>
-      <Label>Login con magic link 🧙🏽‍♂️</Label>
-      <Input
-        type="text"
-        placeholder="Ingresa tu correo"
-        onChange={(e) => setEmailAddress(e.target.value)}
-        value={emailAdress}
-      />
-      <Button type="submit" disabled={isTokenSent || isLoading}>
-        {isTokenSent
-          ? "Token enviado"
-          : isLoading
-          ? "Enviando token..."
-          : "Enviar token"}
-      </Button>
-    </Form>
+    <>
+      <Header />
+      <Form onSubmit={authenticateUser}>
+        <Label>Envio de token con magic link 🧙🏽‍♂️</Label>
+        <Input
+          type="text"
+          placeholder="Ingresa tu correo"
+          onChange={(e) => setEmailAddress(e.target.value)}
+          value={emailAdress}
+        />
+        <Button type="submit" disabled={isTokenSent || isLoading}>
+          {isTokenSent
+            ? "Token enviado"
+            : isLoading
+            ? "Enviando token..."
+            : "Enviar token"}
+        </Button>
+      </Form>
+    </>
   );
 };
 
