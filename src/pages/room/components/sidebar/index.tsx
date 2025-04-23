@@ -27,7 +27,7 @@ const Sidebar = () => {
             }}
             onClick={handleResetVotes}
           >
-            Resetear Votos
+            {showVotes ? "Nueva historia" : "Resetear votos"}
           </RevealButton>
         </div>
       )}

@@ -21,6 +21,8 @@ import RoomHeader from "./components/room-header";
 import Sidebar from "./components/sidebar";
 import { RoomProvider, useRoomContext } from "./context/room-context";
 import Button from "../../components/atoms/button";
+import Chart from "react-google-charts";
+import { useMemo } from "react";
 
 const cards = ["1", "2", "3", "5", "8", "13", "?"];
 
@@ -34,10 +36,61 @@ const RoomContent = () => {
     handleVote,
     handleTicketDescriptionChange,
     isOwner,
+    connectedUsers,
   } = useRoomContext();
 
   const [ticketDraft, setTicketDraft] = useState<string>(ticketDescription);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const chartData = useMemo(() => {
+    const voteCounts: Record<string, number> = {};
+
+    const votedUsers = connectedUsers.filter(
+      (user) => user.vote !== null && user.vote !== undefined
+    );
+
+    // Contar votos
+    votedUsers.forEach((user) => {
+      const voteKey = String(user.vote);
+      voteCounts[voteKey] = (voteCounts[voteKey] || 0) + 1;
+    });
+
+    const totalVotes = votedUsers.length;
+
+    const percentageData: [string, number][] = Object.entries(voteCounts)
+      .map(([vote, count]) => {
+        const safeCount = Number(count); // forzamos tipo number
+        const percentage = (safeCount / totalVotes) * 100;
+        return [`${vote} - ${percentage.toFixed(1)}%`, percentage] as [
+          string,
+          number
+        ];
+      })
+      .sort((a, b) => b[1] - a[1]); // orden descendente por porcentaje
+
+    return percentageData.length > 0
+      ? [["Valor", "Porcentaje"], ...percentageData]
+      : [
+          ["Valor", "Porcentaje"],
+          ["Sin votos", 100],
+        ];
+  }, [connectedUsers]);
+
+  const options = {
+    backgroundColor: "transparent",
+    pieHole: 0.4,
+    legend: {
+      textStyle: {
+        color: "black",
+        fontSize: 18,
+      },
+    },
+    pieSliceText: "label",
+    pieSliceTextStyle: {
+      color: "white",
+      fontSize: 12,
+    },
+  };
 
   useEffect(() => {
     setTicketDraft(ticketDescription);
@@ -107,17 +160,27 @@ const RoomContent = () => {
           ) : (
             <TicketDraft>{ticketDraft || "Sin descripción"}</TicketDraft>
           )}
-          <CardsGrid>
-            {cards.map((value, index) => (
-              <Card
-                key={index}
-                value={value}
-                selected={selectedVote === value}
-                onClick={() => handleVote(value)}
-                disabled={showVotes}
-              />
-            ))}
-          </CardsGrid>
+          {!showVotes ? (
+            <CardsGrid>
+              {cards.map((value, index) => (
+                <Card
+                  key={index}
+                  value={value}
+                  selected={selectedVote === value}
+                  onClick={() => handleVote(value)}
+                  disabled={showVotes}
+                />
+              ))}
+            </CardsGrid>
+          ) : (
+            <Chart
+              chartType="PieChart"
+              data={chartData}
+              options={options}
+              width={"100%"}
+              height={"400px"}
+            />
+          )}
         </CardsSection>
 
         <Sidebar />
