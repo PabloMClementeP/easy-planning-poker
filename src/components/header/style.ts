@@ -17,7 +17,7 @@ export const HeaderWrapper = styled.div`
 `;
 
 export const Button = styled.button`
-  background: #010a07;
+  background-color: #3b82f6;
   color: white;
   border: none;
   padding: 8px 16px;

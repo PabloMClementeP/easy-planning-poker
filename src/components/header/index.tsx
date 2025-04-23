@@ -1,5 +1,6 @@
 import { Session } from "@supabase/supabase-js";
-import { Button, HeaderSection, HeaderWrapper } from "./style";
+import { HeaderSection, HeaderWrapper } from "./style";
+import Button from "../atoms/button";
 
 type HeaderProps = {
   session?: Session;

@@ -124,7 +124,6 @@ const useRoom = (session: any) => {
 
   const handleRevealVotes = () => {
     if (!channelRef.current) return;
-
     setShowVotes(true);
     channelRef.current.send({
       type: "broadcast",
@@ -138,6 +137,8 @@ const useRoom = (session: any) => {
 
     setShowVotes(false);
     setSelectedVote(null);
+    setTicketDescription("");
+
     await channelRef.current.track({ vote: null });
 
     channelRef.current.send({

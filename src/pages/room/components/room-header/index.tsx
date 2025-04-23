@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { HeaderWrapper } from "./style";
 import { MdOutlineContentCopy } from "react-icons/md";
+import Button from "../../../../components/atoms/button";
 
 interface RoomProps {
   room: any;
@@ -19,8 +20,14 @@ const RoomHeader = ({ room }: RoomProps) => {
   return (
     <HeaderWrapper>
       <div>
-        <a href="/">Salir al dashboard</a>
-        <h1>{room?.name}</h1>
+        <Button
+          onClick={() => {
+            window.location.href = "/";
+          }}
+        >
+          <span>Volver al dashboard</span>
+        </Button>
+        <h2>Sala: {room?.name}</h2>
       </div>
       <div
         style={{

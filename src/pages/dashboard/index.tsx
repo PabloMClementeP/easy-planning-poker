@@ -4,13 +4,9 @@ import { useEffect, useState } from "react";
 import NewRoomModal from "../../components/new-room-modal";
 import { getPlanningRoom } from "../../services/planning-room";
 import { RoomCard } from "../../components/room-card";
-import {
-  DashboardSection,
-  JoinRoomButton,
-  JoinRoomInput,
-  JoinRoomWrapper,
-} from "./style";
+import { DashboardSection, JoinRoomInput, JoinRoomWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/atoms/button";
 
 export type RoomType = {
   id: string;
@@ -69,7 +65,9 @@ const Dashboard = ({ session }: SessionProps) => {
           value={roomIdInput}
           onChange={(e) => setRoomIdInput(e.target.value)}
         />
-        <JoinRoomButton onClick={handleEnterRoom}>Entrar</JoinRoomButton>
+        <Button onClick={handleEnterRoom}>
+          <span>Entrar</span>
+        </Button>
       </JoinRoomWrapper>
       {hsaNoCreatedARoom && <p>Tus salas se mostrarán aquí luego de creadas</p>}
       <DashboardSection>

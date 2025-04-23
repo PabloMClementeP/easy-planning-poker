@@ -33,9 +33,9 @@ export const JoinRoomButton = styled.button`
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #4f46e5;
+    background-color: #3b82f6;
   }
 `;

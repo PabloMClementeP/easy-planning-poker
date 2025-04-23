@@ -20,6 +20,7 @@ export const CardWrapper = styled.div`
   border: 1px solid #ccc;
   border-radius: 8px;
   margin-bottom: 10px;
+  background-color: #fff;
 `;
 
 export const CardSpan = styled.span<{

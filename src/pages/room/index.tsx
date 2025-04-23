@@ -4,8 +4,11 @@ import {
   Container,
   CardsSection,
   CardsGrid,
-  RevealButton,
   StoryInput,
+  ModalOverlay,
+  ModalContent,
+  ModalActions,
+  TicketDraft,
 } from "./style";
 
 import { useEffect, useState } from "react";
@@ -17,6 +20,7 @@ import Card from "../../components/card";
 import RoomHeader from "./components/room-header";
 import Sidebar from "./components/sidebar";
 import { RoomProvider, useRoomContext } from "./context/room-context";
+import Button from "../../components/atoms/button";
 
 const cards = ["1", "2", "3", "5", "8", "13", "?"];
 
@@ -33,6 +37,7 @@ const RoomContent = () => {
   } = useRoomContext();
 
   const [ticketDraft, setTicketDraft] = useState<string>(ticketDescription);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setTicketDraft(ticketDescription);
@@ -57,33 +62,50 @@ const RoomContent = () => {
         <CardsSection>
           {isOwner ? (
             <>
-              <StoryInput
-                placeholder="descripción del ticket..."
-                value={ticketDescription}
-                onChange={(e) => handleTicketDescriptionChange(e.target.value)}
-              />
-              <div style={{ display: "flex", gap: 10 }}>
-                <RevealButton
-                  onClick={async () => {
-                    await updateTicketDescription(room?.id, ticketDraft);
-                    handleTicketDescriptionChange(ticketDraft);
-                  }}
-                >
-                  Guardar
-                </RevealButton>
-              </div>
+              {ticketDraft && (
+                <TicketDraft>{ticketDraft || "Sin descripción"}</TicketDraft>
+              )}
+              {!showVotes && (
+                <Button onClick={() => setIsModalOpen(true)}>
+                  <span>
+                    {ticketDraft ? "Editar historia" : "Añadir historia"}
+                  </span>
+                </Button>
+              )}
+
+              {isModalOpen && (
+                <ModalOverlay>
+                  <ModalContent>
+                    <h3>
+                      {ticketDraft
+                        ? "Editar historia del ticket"
+                        : "Añadir nueva historia"}
+                    </h3>
+                    <StoryInput
+                      placeholder="Escribe la descripción del ticket..."
+                      value={ticketDraft}
+                      onChange={(e) => setTicketDraft(e.target.value)}
+                    />
+                    <ModalActions>
+                      <Button
+                        onClick={async () => {
+                          await updateTicketDescription(room?.id, ticketDraft);
+                          handleTicketDescriptionChange(ticketDraft);
+                          setIsModalOpen(false);
+                        }}
+                      >
+                        <span>Guardar</span>
+                      </Button>
+                      <Button onClick={() => setIsModalOpen(false)}>
+                        <span>Cancelar</span>
+                      </Button>
+                    </ModalActions>
+                  </ModalContent>
+                </ModalOverlay>
+              )}
             </>
           ) : (
-            <h3
-              style={{
-                width: "80%",
-                textAlign: "center",
-                fontSize: 20,
-                fontWeight: 600,
-              }}
-            >
-              {ticketDraft || "Sin descripción"}
-            </h3>
+            <TicketDraft>{ticketDraft || "Sin descripción"}</TicketDraft>
           )}
           <CardsGrid>
             {cards.map((value, index) => (
