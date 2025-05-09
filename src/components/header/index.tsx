@@ -1,5 +1,5 @@
 import { Session } from "@supabase/supabase-js";
-import { HeaderSection, HeaderWrapper } from "./style";
+import { HeaderSection, HeaderWrapper, UserSection } from "./style";
 import Button from "../atoms/button";
 
 type HeaderProps = {
@@ -15,7 +15,19 @@ const Header = (props: HeaderProps) => {
       <HeaderWrapper>
         {session ? (
           <>
-            <h3>Hola {session?.user?.user_metadata?.userName} 👋🏽</h3>
+            <UserSection
+              onClick={() => {
+                window.location.href = "/auth/user-config";
+              }}
+            >
+              <img
+                src={`/avatars/${session?.user?.user_metadata?.userAvatar}.webp`}
+                alt="avatar"
+                width={46}
+                height={46}
+              />
+              <h2>{session?.user?.user_metadata?.userName}</h2>
+            </UserSection>
             <Button
               onClick={() =>
                 setShowCreateRoomModal && setShowCreateRoomModal(true)
@@ -26,7 +38,7 @@ const Header = (props: HeaderProps) => {
           </>
         ) : (
           <>
-            <img src="favicon.webp" alt="logo" width={46} height={46} />
+            <img src="/favicon.webp" alt="logo" width={46} height={46} />
             <h3>Bienvenido a Easy Planning Poker</h3>
           </>
         )}

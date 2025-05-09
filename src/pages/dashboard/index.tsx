@@ -7,6 +7,7 @@ import { RoomCard } from "../../components/room-card";
 import { DashboardSection, JoinRoomInput, JoinRoomWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/atoms/button";
+import NoRoomMsg from "../../components/no-room-msg";
 
 export type RoomType = {
   id: string;
@@ -69,7 +70,7 @@ const Dashboard = ({ session }: SessionProps) => {
           <span>Entrar</span>
         </Button>
       </JoinRoomWrapper>
-      {hsaNoCreatedARoom && <p>Tus salas se mostrarán aquí luego de creadas</p>}
+      {hsaNoCreatedARoom && <NoRoomMsg />}
       <DashboardSection>
         {shouldShowRoom &&
           rooms?.map(({ id, name, created_at, isPublic }, key) => (

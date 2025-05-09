@@ -47,7 +47,7 @@ const NewUserSetup: React.FC<NewUserSetupProps> = ({ onSubmit }) => {
     <>
       <Header />
       <Container>
-        <Title>Easy Planning Poker 🃏</Title>
+        <Title>Easy Planning Poker</Title>
         <Subtitle>Configura tu perfil para comenzar</Subtitle>
         <Form onSubmit={handleSubmit}>
           <Label>Tu nombre</Label>
@@ -58,7 +58,7 @@ const NewUserSetup: React.FC<NewUserSetupProps> = ({ onSubmit }) => {
             onChange={(e) => setUserName(e.target.value)}
           />
 
-          <Label>Selecciona un color</Label>
+          <Label>Selecciona un avatar</Label>
           <ColorPicker>
             {avatars.map((avatar, index) => (
               <AvatarOption $isSelected={selectedAvatar === avatar}>
